@@ -89,4 +89,4 @@ GROUP BY
 
 > **运行结果如下**: 
 >
-> ![image-20210309193127133](F:\mdPic\image-20210309193127133.png)
+> ![image-20210309193127133](https://raw.githubusercontent.com/GoToThePast/oracle/master/test1/实验结果.png)
