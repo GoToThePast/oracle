@@ -120,44 +120,23 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
 
 - 第3步：测试其他用户之间的只读共享和读写共享共享。
 
-  1. 测试select
+  1. 测试用户new_zrf的select权限
   
-     <img src="https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/测试其他用户1.png" style="zoom:100%;" />
+     ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%B5%8B%E8%AF%95%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7select.jpg)
   
-  2. 测
-
+  2. 测试用户new_zrf的insert权限
   
-
-
-- 第3步：用户hr连接到pdborcl，查询new_user授予它的视图myview
-
-> 
-
-## 数据库和表空间占用分析
-
-> 当全班同学的实验都做完之后，数据库pdborcl中包含了每个同学的角色和用户。 所有同学的用户都使用表空间users存储表的数据。 表空间中存储了很多相同名称的表mytable和视图myview，但分别属性于不同的用户，不会引起混淆。 随着用户往表中插入数据，表空间的磁盘使用量会增加。
+     ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%B5%8B%E8%AF%95%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7_insert1.jpg)
+  
+  3. 用户new_zrf授权后再次测试的insert权限
+  
+     ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%B5%8B%E8%AF%95%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7_insert2.jpg)
 
 ## 查看数据库的使用情况
 
-以下样例查看表空间的数据库文件，以及每个文件的磁盘占用情况。
+查看表空间的数据库文件，以及每个文件的磁盘占用情况。
 
-```
-$ sqlplus system/123@pdborcl
-
-SQL>SELECT tablespace_name,FILE_NAME,BYTES/1024/1024 MB,MAXBYTES/1024/1024 MAX_MB,autoextensible FROM dba_data_files  WHERE  tablespace_name='USERS';
-
-SQL>SELECT a.tablespace_name "表空间名",Total/1024/1024 "大小MB",
- free/1024/1024 "剩余MB",( total - free )/1024/1024 "使用MB",
- Round(( total - free )/ total,4)* 100 "使用率%"
- from (SELECT tablespace_name,Sum(bytes)free
-        FROM   dba_free_space group  BY tablespace_name)a,
-       (SELECT tablespace_name,Sum(bytes)total FROM dba_data_files
-        group  BY tablespace_name)b
- where  a.tablespace_name = b.tablespace_name;
-```
-
-- autoextensible是显示表空间中的数据文件是否自动增加。
-- MAX_MB是指数据文件的最大容量。
+- 
 
 ## 评分标准
 
