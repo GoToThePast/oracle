@@ -26,82 +26,112 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
   sqlplus system/123@202.115.82.8/pdborcl
   ```
 
-  
-
 - 第2步：创建角色wangwei_res_view
+
+  ```sql
+  CREATE ROLE wangwei_res_view;
+  ```
 
 - 第3步：赋予权限给wangwei_res_view
 
+  ```sql
+  GRANT connect,resource,CREATE VIEW TO wangwei_res_view;
+  ```
+
 - 第4步：创建用户wangwei_user
 
-- 第5步：为用户wangwei_user分配50M表空间
-
+  ```sql
+  CREATE USER new_user IDENTIFIED BY 123 DEFAULT TABLESPACE users TEMPORARY 
   ```
+
+- 第5步：授权wangwei_user用户访问users表空间，空间限额是50M。
+
+  ```sql
   ALTER USER wangwei_user QUOTA 50M ON users;
   ```
 
 - 第6步：将授权角色wangwei_res_view给用户wangwei_user
 
-  ```
+  ```sql
   GRANT wangwei_res_view TO wangwei_user;
   ```
 
+
+
+
+## 创建表
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/2.jpg)
+
+- 第1步：以wangwei_user登录到pdborcl
+
+  ```
+  sqlplus wangwei_user/123@202.115.82.8/pdborcl
+  ```
+
+- 第2步：显示当前用户
+
+  ```sql
+  show user;
+  ```
+
+- 第3步：创建表mytable
+
+  ```sql
+  CREATE TABLE mytable (id number,name varchar(50));
+  ```
+
+- 第4步：插入数据
+
+  ```sql
+  INSERT INTO mytable(id,name)VALUES(1,'wang');
+  INSERT INTO mytable(id,name)VALUES (2,'wwei');
+  ```
+
+- 第5步：创建视图并测试
+
+  ```sql
+  CREATE VIEW myview AS SELECT name FROM mytable;
+  SELECT * FROM myview;
+  ```
+
+- 第6步：将myview的SELECT对象权限授予hr用户。
+
+  ```sql
+  GRANT SELECT ON myview TO hr;
+  ```
+
+
+## 测试
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/3.jpg)
+
+- 第1步：以hr登录到pdborcl
+
+  ```
+  sqlplus hr/123@202.115.82.8/pdborcl
+  ```
+
+- 第2步：查询wangwei_user授予它的视图myview
+
+  ```sql
+  SELECT * FROM wangwei_user.myview;
+  ```
+
+- 第3步：测试其他用户之间的只读共享和读写共享共享。
+
+  1. 测试select
+  
+     <img src="https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/测试其他用户1.png" style="zoom:100%;" />
+  
+  2. 测
+
   
 
-```
-$ sqlplus system/123@202.115.82.8/pdborcl
-SQL> CREATE ROLE con_res_view;
-Role created.
-SQL> GRANT connect,resource,CREATE VIEW TO con_res_view;
-Grant succeeded.
-SQL> CREATE USER new_user IDENTIFIED BY 123 DEFAULT TABLESPACE users TEMPORARY TABLESPACE temp;
-User created.
-SQL> ALTER USER new_user QUOTA 50M ON users;
-User altered.
-SQL> GRANT con_res_view TO new_user;
-Grant succeeded.
-SQL> exit
-```
-
-> 语句“ALTER USER new_user QUOTA 50M ON users;”是指授权new_user用户访问users表空间，空间限额是50M。
-
-- 第2步：新用户new_user连接到pdborcl，创建表mytable和视图myview，插入数据，最后将myview的SELECT对象权限授予hr用户。
-
-```
-$ sqlplus new_user/123@pdborcl
-SQL> show user;
-USER is "NEW_USER"
-SQL> CREATE TABLE mytable (id number,name varchar(50));
-Table created.
-SQL> INSERT INTO mytable(id,name)VALUES(1,'zhang');
-1 row created.
-SQL> INSERT INTO mytable(id,name)VALUES (2,'wang');
-1 row created.
-SQL> CREATE VIEW myview AS SELECT name FROM mytable;
-View created.
-SQL> SELECT * FROM myview;
-NAME
---------------------------------------------------
-zhang
-wang
-SQL> GRANT SELECT ON myview TO hr;
-Grant succeeded.
-SQL>exit
-```
 
 - 第3步：用户hr连接到pdborcl，查询new_user授予它的视图myview
 
-```
-$ sqlplus hr/123@pdborcl
-SQL> SELECT * FROM new_user.myview;
-NAME
---------------------------------------------------
-zhang
-wang
-SQL> exit
-```
-
-> 测试一下同学用户之间的表的共享，只读共享和读写共享都测试一下。
+> 
 
 ## 数据库和表空间占用分析
 
