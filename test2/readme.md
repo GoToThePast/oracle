@@ -1,4 +1,4 @@
-实验2：用户及权限管理
+# 实验2：用户及权限管理
 
 ## 实验目的
 
@@ -14,7 +14,7 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
 
 # 实验步骤
 
-## 创建用户
+## 1. 创建用户
 
 **创建的角色为wangwei_res_view,创建的用户为wangwei_user**
 
@@ -59,7 +59,7 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
 
 
 
-## 创建表
+## 2. 创建表
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/2.jpg)
 
@@ -102,7 +102,7 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
   ```
 
 
-## 测试
+## 3. 测试
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/3.jpg)
 
@@ -132,7 +132,7 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
   
      ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%B5%8B%E8%AF%95%E5%85%B6%E4%BB%96%E7%94%A8%E6%88%B7_insert2.jpg)
 
-## 查看数据库的使用情况
+## 4. 查看数据库的使用情况
 
 查看表空间的数据库文件，以及每个文件的磁盘占用情况。
 
