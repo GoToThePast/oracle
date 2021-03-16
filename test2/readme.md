@@ -1,4 +1,4 @@
-# 实验2：用户及权限管理
+实验2：用户及权限管理
 
 ## 实验目的
 
@@ -136,12 +136,10 @@ Oracle有一个开发者角色resource，可以创建表、过程、触发器等
 
 查看表空间的数据库文件，以及每个文件的磁盘占用情况。
 
-- 
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%A9%BA%E9%97%B41.jpg)
 
-## 评分标准
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%A9%BA%E9%97%B42.jpg)
 
-- 实验独立完成，有详细的分析文档，文档中写明自己的用户名。（总分20分）
-- 角色创建正确（总分20分）
-- 用户创建及角色分配正确（总分20分）
-- 表空间分配正确（总分20分）
-- 对象创建及共享的设置正确（总分20分）
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%A9%BA%E9%97%B43.jpg)
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test2/%E6%9F%A5%E7%9C%8B%E8%A1%A8%E7%A9%BA%E9%97%B44.jpg)
