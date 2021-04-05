@@ -25,7 +25,7 @@
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test3/ssh.jpg)
 
-       2. sys账号登录WEI
+2. sys账号登录WEI
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test3/login.jpg)
 
