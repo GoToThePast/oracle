@@ -17,7 +17,26 @@
 
 ## 实验步骤
 
-### 1. 授权
+### 1. 创建表空间
 
-利用system用户赋予用户**wangwei_user**权限
 
+
+
+
+
+
+### 2. 授权
+
+利用**system**用户赋予用户WEI权限
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test3/%E6%8E%88%E6%9D%83.jpg)
+
+
+
+### 2. 创建表
+
+1. 登录**wangwei_user**用户
+2. 执行test3.sql文件
+3. 成功创建两张表
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test3/创建.jpg)
