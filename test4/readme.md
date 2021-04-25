@@ -129,7 +129,7 @@
    sql代码如下:
 
    ```sql
-   1
+   select * FROM employees WHERE employee_id=1
    ```
 
    
