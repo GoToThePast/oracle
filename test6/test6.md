@@ -23,6 +23,7 @@
 ## 2. 数据表说明
 
 ### 2.1 User表：存储用户数据
+
    - user_id：INT 用户id
    - name：VARCHAR 用户名
    - password：VARCHAR 密码
@@ -361,7 +362,7 @@ CREATE ROLE wdb_manager IDENTIFIED BY 123456;
 CREATE ROLE wdb_reader IDENTIFIED BY 123456;
 ```
 
- ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q1.jpg)
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q1.png)
 
 ### 5.2 角色授权
 
@@ -371,11 +372,13 @@ grant create session,create table,create sequence,create VIEW to wdb_manager;
 grant create session to wdb_reader;
 ```
 
- ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q2.jpg)
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q2.png)
 
 ### 5.3 查看结果
 
- ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q3.jpg)
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q3.png)
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q4.png)
 
 ### 5.4 创建用户
 
@@ -395,11 +398,13 @@ GRANT "CONNECT" TO "wangw" ;
 GRANT "CONNECT" TO "wangw1" ;
 ```
 
- ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q4.jpg)
+
 
 ### 5.5 授权
 
- ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q5.jpg)
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q5.png)
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q6.png)
 
 ## 6. 综合设计
 
@@ -544,6 +549,24 @@ archive log list;
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/5.png)
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/6.png)
+
+
+
+复制数据库文件
+
+ ![img](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/b1.png)
+
+修改数据
+
+ ![img](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/b2.png)
+
+ ![img](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/b3.png) 
+
+![img](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/b4.png)
+
+结束备份
+
+![img](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/b5.png)
 
 ## 8.总结
 
