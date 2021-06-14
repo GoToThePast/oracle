@@ -359,23 +359,81 @@ END ADD_WAREHOUSE;
 
 
 
+
+
+
+
 ## 7.设计手动备份方案
 
 >**手动备份方案——脱机备份**
 >
 >**自动备份方案——用户管理备份**
 
+### 7.1 手动备份
+
+1. 查询所有的数据文件、控制文件和联机重做日志文件
+
+```sql
+SELECT NAME FROM v$datafile
+  UNION ALL
+  SELECT MEMBER as NAME FROM v$logfile
+  UNION ALL
+SELECT NAME FROM v$controlfile;
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/手动备份.jpg)
+
+2. 手动备份这些文件 
+3. 数据更改后只需将原数据复制到原来的文件即可 
 
 
 
+### 7.2 自动备份
+
+```sql
+-- 让表空间进入备份模式 
+ALTER TABLESPACE *** BEGIN BACKUP 
+-- 复制表空间文件 
+-- 让表空间结束备份模式 
+ALTER TABLESPACE *** END BACKUP 
+-- 复制控制文件和初始化文件 
+-- 临时停止归档 
+ALTER SYSTEM SWITCH LOGFILE; 
+ALTER SYSTEM ARCHIVE LOG STOP; 
+-- 复制归档日志文件 
+-- 重新开启归档 
+ALTER SYSTEM ARCHIVE LOG START; 
+```
 
 
 
+```sql
+--1.查看归档模式 
+archive log list; 
+2.以archive模式启动数据库 
+    2.2 shutdown immediate 
+    2.3 startup mount 
+    2.4 alter database archivelog; 
+3.archive log list 
+4.alter database open; 
+5.ALTER tablespace users begin backup; 
+```
 
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/1.png)
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/2.png)
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/3.png)
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/4.png)
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/5.png)
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/6.png)
 
 ## 8.总结
 
-通过本次期末项目，让我我对Oracle的基本概念如表和视图理解的更加深刻了，Oracle 数据库数据对象中最基本的是表和视图，其他还有约束、序列、函数、存储过程、包、触发器等。对数据库的操作可以基本归结为对数据对象的操作,理解和掌握 Oracle数据库对象是学习Oracle的捷径。同时让我对以前就比较迷惑的数据库、实例、表空间、用户、角色之间的关系豁然开朗：
+通过本次期末项目，让我对Oracle的基本概念如表和视图理解的更加深刻了，Oracle 数据库数据对象中最基本的是表和视图，其他还有约束、序列、函数、存储过程、包、触发器等。对数据库的操作可以基本归结为对数据对象的操作,理解和掌握 Oracle数据库对象是学习Oracle的捷径。同时让我对以前就比较迷惑的数据库、实例、表空间、用户、角色之间的关系豁然开朗：
 
 - 数据库是物理数据、内存、操作系统进程的组合体
 - 实例是用来访问和使用数据库的一块进程，它只存在于内存中
