@@ -60,7 +60,7 @@
 
 
 
-## 4. 设计简介
+## 4 设计简介
 
 ### 4.1 创建表空间
 
@@ -88,7 +88,7 @@ EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT AUTO;
 
 ### 4.2 创建数据表
 
-### 4.2.1 User表
+#### 4.2.1 User表
 
 ```sql
 CREATE TABLE GMAE_USER (
@@ -103,7 +103,7 @@ partition part_02 tablespace wangw_users1);
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建User表.jpg)
 
-### 4.2. 2 Hero表
+#### 4.2. 2 Hero表
 
 ```sql
 CREATE TABLE hero (
@@ -117,7 +117,7 @@ partition part_02 tablespace wangw_users1);
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Hero表.jpg)
 
-### 4.2.3 Attribute表
+#### 4.2.3 Attribute表
 
 ```sql
 CREATE TABLE attribute (
@@ -135,7 +135,7 @@ partition part_02 tablespace wangw_users1);
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Attribute表.jpg)
 
-### 4.2.4  Shop表
+#### 4.2.4  Shop表
 
 ```sql
 CREATE TABLE shop (
@@ -149,7 +149,7 @@ partition part_02 tablespace wangw_users1);
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建shop表.jpg)
 
-### 4.2.5 Game_Order表
+#### 4.2.5 Game_Order表
 
 ```sql
 CREATE TABLE game_order (
@@ -165,7 +165,7 @@ partition part_02 tablespace wangw_users1);
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Order表.jpg)
 
-### 4.2.6 Warehose表
+#### 4.2.6 Warehose表
 
 ```sql
 CREATE TABLE warehouse (
@@ -180,9 +180,9 @@ partition part_02 tablespace wangw_users1);
 
 
 
-### 4.3 向表中插入数据
+## 4.3 向表中插入数据
 
-### 4.3.1 Attribute表
+#### 4.3.1 Attribute表
 
 ```sql
 CREATE OR REPLACE PROCEDURE ADD_ATTRIBUTE AS 
@@ -197,7 +197,7 @@ END ADD_ATTRIBUTE;
 
  ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Attribute表.jpg)
 
-### 4.3.2 Hero表
+#### 4.3.2 Hero表
 
 ```sql
 CREATE OR REPLACE PROCEDURE ADD_HERO AS 
@@ -214,7 +214,7 @@ END ADD_HERO;
 
  ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Hero表.jpg)
 
-### 4.3.3 Game_order表
+#### 4.3.3 Game_order表
 
 ```sql
 CREATE OR REPLACE PROCEDURE ADD_ORDER( 
@@ -268,7 +268,7 @@ END ADD_ORDER;
 
  ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Game_order表2.jpg)
 
-### 4.3.1 User表
+#### 4.3.4 User表
 
 ```sql
 -- user 表 
@@ -291,7 +291,7 @@ END ADD_USER;
 
  ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入User表.jpg)
 
-### 4.3.1 Shop表
+#### 4.3.5 Shop表
 
 ```sql
 CREATE OR REPLACE PROCEDURE ADD_SHOP AS  
@@ -317,7 +317,7 @@ END ADD_SHOP;
 
  ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Shop表.jpg)
 
-### 4.3.1 Warehose表
+#### 4.3.6 Warehose表
 
 ```sql
 CREATE OR REPLACE PROCEDURE ADD_WAREHOUSE( 
@@ -351,15 +351,129 @@ END ADD_WAREHOUSE;
 
 ## 5.设计权限及用户分配方案
 
-5.1
+### 5.1 创建角色
+
+```sql
+-- 角色1
+CREATE ROLE wdb_manager IDENTIFIED BY 123456;
+
+-- 角色2
+CREATE ROLE wdb_reader IDENTIFIED BY 123456;
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q1.jpg)
+
+### 5.2 角色授权
+
+```sql
+-- 角色授权
+grant create session,create table,create sequence,create VIEW to wdb_manager;
+grant create session to wdb_reader;
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q2.jpg)
+
+### 5.3 查看结果
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q3.jpg)
+
+### 5.4 创建用户
+
+```sql
+-- USER SQL
+CREATE USER "wangw" IDENTIFIED BY "123456"
+DEFAULT TABLESPACE "WANGW_USERS"
+TEMPORARY TABLESPACE "TEMP";
+CREATE USER "wangw1" IDENTIFIED BY "123456"
+DEFAULT TABLESPACE "WANGW_USERS1"
+TEMPORARY TABLESPACE "TEMP";
+-- QUOTAS
+ALTER USER "wangw" QUOTA UNLIMITED ON "WANGW_USERS";
+ALTER USER "wangw1" QUOTA UNLIMITED ON "WANGW_USERS1";
+-- ROLES
+GRANT "CONNECT" TO "wangw" ;
+GRANT "CONNECT" TO "wangw1" ;
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q4.jpg)
+
+### 5.5 授权
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/q5.jpg)
 
 ## 6. 综合设计
 
 **在数据库中建立一个程序包，在包中用PL/SQL语言设计一些存储过程和函数，实现比较复杂的业务逻辑，用模拟数据进行执行计划分析**
 
+>设计简介
+>
+>包名：WW_WORK 
+>
+>函数名：get_user(user_id number)
+>
+>功能：输入用户id，根据用户仓库查询用户具有的英雄的属性
+>
+>过程名：Get_user_info(user_id number)
+
+### 6.1 创建包 
+
+```sql
+-- 创建包 
+CREATE OR REPLACE
+PACKAGE WW_WORK AS
+FUNCTION get_user(order_id_t NUMBER) RETURN VARCHAR2;
+PROCEDURE get_user_info(train_id_t VARCHAR2);
+END WW_WORK;
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/res1.png)
 
 
 
+### 6.2 创建函数和过程
+
+```sql
+create or replace PACKAGE BODY WW_WORK IS
+FUNCTION get_user(user_id NUMBER) RETURN VARCHAR2
+AS
+M VARCHAR2(100);
+BEGIN
+select * into N from WAREHOUSE where USER_ID=user_id;
+RETURN N;
+END;
+PROCEDURE get_user_info(user_id number)
+AS
+cursor c_hero is select HERO_ID from WAREHOUSE where USER_ID = in_user_id;
+v_HERO_ID warehouse.hero_id%type;
+v_ATTRIBUTE_ID hero.attribute_id%type;
+v_HP attribute.hp%type;
+v_MAGIC attribute.magic%type;
+v_ATTACK attribute.attack%type;
+v_DEFENSE attribute.defense%type;
+v_SPEED attribute.speed%type;
+BEGIN
+DBMS_OUTPUT.ENABLE(buffer_size => null);
+open c_hero;
+loop
+fetch c_hero into v_HERO_ID;
+exit when c_hero%NOTFOUND;
+select ATTRIBUTE_ID into v_ATTRIBUTE_ID from HERO where HERO_ID = v_HERO_ID;
+select HP,MAGIC,ATTACK,DEFENSE,SPEED into
+v_HP,v_MAGIC,v_ATTACK,v_DEFENSE,v_SPEED from ATTRIBUTE
+where ATTRIBUTE_ID = v_ATTRIBUTE_ID;
+DBMS_OUTPUT.PUT_LINE('英雄ID'||v_HERO_ID||'英雄血量'||v_HP||'英雄蓝量'||v_MAGIC||
+'英雄攻击'||v_ATTACK||'英雄防御'||v_DEFENSE||'英雄移速'||v_SPEED);
+end loop;
+close c_hero;
+end;
+END WW_WORK;
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/res2.png)
+
+### 6.3 测试结果
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/res3.png)
 
 
 
