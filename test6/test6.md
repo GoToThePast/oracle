@@ -147,7 +147,7 @@ partition part_01 tablespace wangw_users,
 partition part_02 tablespace wangw_users1);
 ```
 
-![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Shop表.jpg)
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建shop表.jpg)
 
 ### 4.2.5 Game_Order表
 
@@ -176,7 +176,7 @@ partition part_01 tablespace wangw_users,
 partition part_02 tablespace wangw_users1);
 ```
 
-![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Warehose表.jpg)
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Warehouse表.jpg)
 
 
 
