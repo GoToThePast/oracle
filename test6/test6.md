@@ -18,7 +18,7 @@
 
 涉及角色/用户：
 
-涉及表：User表、Hero表、Attribute表、Shop表、Order表、Warehose表
+涉及表：User表、Hero表、Attribute表、Shop表、Game_Order表、Warehose表
 
 ## 2. 数据表说明
 
@@ -42,7 +42,7 @@
    - hero_id：INT 英雄id
    - price：INT 售卖价格
    - introduce：VARCHAR 介绍
-### 2.5 Order表：订单表
+### 2.5 Game_Order表：订单表
    - order_Id：INT 订单id
    - user_id：INT 用户id
    - hero_Id：INT 英雄id
@@ -57,10 +57,6 @@
 ## 3. 数据库逻辑结构
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84.jpg)
-
-
-
-
 
 
 
@@ -88,13 +84,270 @@ EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT AUTO;
 
 ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建表空间.jpg)
 
+
+
 ### 4.2 创建数据表
+
+### 4.2.1 User表
+
+```sql
+CREATE TABLE GMAE_USER (
+user_id int NOT NULL PRIMARY KEY,
+name varchar(50),
+password varchar(20),
+gold int) 
+partition by hash(user_id)(
+partition part_01 tablespace wangw_users,
+partition part_02 tablespace wangw_users1);
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建User表.jpg)
+
+### 4.2. 2 Hero表
+
+```sql
+CREATE TABLE hero (
+hero_Id int NOT NULL PRIMARY KEY,
+attribute_Id int,
+name varchar(255))
+partition by hash(hero_Id)(
+partition part_01 tablespace wangw_users,
+partition part_02 tablespace wangw_users1);
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Hero表.jpg)
+
+### 4.2.3 Attribute表
+
+```sql
+CREATE TABLE attribute (
+attribute_id int NOT NULL PRIMARY KEY,
+hp int,
+magic int,
+attack int,
+defense int,
+speed int)
+-- hash 分区
+partition by hash(attribute_id)(
+partition part_01 tablespace wangw_users,
+partition part_02 tablespace wangw_users1);
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Attribute表.jpg)
+
+### 4.2.4  Shop表
+
+```sql
+CREATE TABLE shop (
+hero_id int NOT NULL PRIMARY KEY,
+price int,
+introduce varchar(255)) 
+partition by hash(hero_id)(
+partition part_01 tablespace wangw_users,
+partition part_02 tablespace wangw_users1);
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Shop表.jpg)
+
+### 4.2.5 Game_Order表
+
+```sql
+CREATE TABLE game_order (
+order_Id int NOT NULL PRIMARY KEY,
+user_Id int,
+hero_Id int,
+create_date varchar(50),
+status varchar(20))
+partition by hash(order_Id)(
+partition part_01 tablespace wangw_users,
+partition part_02 tablespace wangw_users1);
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Order表.jpg)
+
+### 4.2.6 Warehose表
+
+```sql
+CREATE TABLE warehouse (
+user_id int NOT NULL PRIMARY KEY,
+hero_id int) 
+partition by hash(user_id)(
+partition part_01 tablespace wangw_users,
+partition part_02 tablespace wangw_users1);
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建Warehose表.jpg)
+
+
 
 ### 4.3 向表中插入数据
 
-1. 
+### 4.3.1 Attribute表
 
+```sql
+CREATE OR REPLACE PROCEDURE ADD_ATTRIBUTE AS 
+BEGIN
+    for i in 1..10000
+    loop
+        insert into attribute (ATTRIBUTE_ID,HP,MAGIC,ATTACK,DEFENSE,SPEED) 
+        VALUES (i,100,100,15,25,25);
+    end loop;
+END ADD_ATTRIBUTE;
+```
 
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Attribute表.jpg)
+
+### 4.3.2 Hero表
+
+```sql
+CREATE OR REPLACE PROCEDURE ADD_HERO AS 
+v_name varchar(50); 
+BEGIN 
+  for i in 1..10000 
+  loop  
+    v_name := '张三'||i||'号'; 
+    insert into hero (HERO_ID,ATTRIBUTE_ID,NAME) VALUES  
+    (i,i,v_name); 
+  end loop; 
+END ADD_HERO; 
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Hero表.jpg)
+
+### 4.3.3 Game_order表
+
+```sql
+CREATE OR REPLACE PROCEDURE ADD_ORDER( 
+    -- 键入USER 数量 
+    in_user_count in number, 
+    -- 键入英雄 数量 
+    in_hero_count in number 
+) AS  
+    -- 显示声明 hero 游标 
+    cursor c_hero is select HERO_ID from HERO; 
+    -- 定义hero_id 
+    v_hero_id HERO.HERO_ID%type; 
+    -- 随机订单数 
+    v_order_random_count number; 
+    -- 随机用户ID 
+    v_user_id game_order.user_id%type; 
+    -- 日期 
+    v_date date; 
+    -- 全局订单index; 
+    v_index game_order.order_id%type := 1; 
+BEGIN 
+   -- 打开游标 
+   open c_hero; 
+   -- 遍历游标 
+   loop  
+        FETCH c_hero into v_hero_id; 
+        -- 退出条件 
+        EXIT when c_hero%NOTFOUND; 
+        -- 执行操作 
+        -- 改用户随机订单数 
+        -- 1. 获取随机数 
+        SELECT trunc(dbms_random.value(1,5))into v_order_random_count FROM DUAL;  
+        for k in 1..v_order_random_count 
+        loop 
+            -- 2.获得随机用户id 
+            SELECT trunc(dbms_random.value(1,in_user_count))into v_user_id FROM DUAL; 
+            -- 4.获取随机日期 
+            v_date := TO_DATE(sysdate); 
+--            DBMS_OUTPUT.PUT_LINE(v_hero_id||'&'||v_user_id||'&'||v_hero_id||'&'||v_date||'死'); 
+            insert into GAME_ORDER (ORDER_ID,USER_ID,HERO_ID,CREATE_DATE,STATUS) 
+            VALUES (v_index,v_user_id,v_hero_id,v_date,'死'); 
+            v_index := v_index+1; 
+        end loop; 
+   end loop; 
+   -- 关闭游标 
+   close c_hero; 
+END ADD_ORDER; 
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Game_order表1.jpg)
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Game_order表2.jpg)
+
+### 4.3.1 User表
+
+```sql
+-- user 表 
+CREATE OR REPLACE PROCEDURE ADD_USER AS  
+v_name varchar(50); 
+v_password varchar(50); 
+v_gole number; 
+BEGIN 
+    -- 20000名召唤师 
+    for i in 1..20000 
+    loop 
+        v_name := '召唤师'||i||'号'; 
+        v_password := 'password'||i||'.'; 
+        -- 1. 获取随机金币 
+        SELECT trunc(dbms_random.value(1,200000))into v_gole FROM DUAL;  
+        insert into gmae_user (USER_ID,NAME,PASSWORD,GOLD) VALUES (i,v_name,v_password,v_gole); 
+    end loop;
+END ADD_USER; 
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入User表.jpg)
+
+### 4.3.1 Shop表
+
+```sql
+CREATE OR REPLACE PROCEDURE ADD_SHOP AS  
+    cursor c_hero is select HERO_ID from HERO; 
+    v_hero_id HERO.HERO_ID%type; 
+    -- shop介绍 
+    v_shop_introduce varchar(80); 
+    v_price shop.price%type; 
+    v_index number := 1; 
+BEGIN 
+    open c_hero; 
+    loop 
+        fetch c_hero into v_hero_id; 
+        exit when c_hero%NOTFOUND; 
+        SELECT trunc(dbms_random.value(1,3200))into v_price FROM DUAL; 
+        v_shop_introduce := '这是英雄'||v_hero_id||'号';
+        insert into shop (HERO_ID,PRICE,INTRODUCE) 
+        VALUES (v_hero_id,v_price,v_shop_introduce); 
+    end loop; 
+    close c_hero; 
+END ADD_SHOP; 
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Shop表.jpg)
+
+### 4.3.1 Warehose表
+
+```sql
+CREATE OR REPLACE PROCEDURE ADD_WAREHOUSE( 
+    in_hero_count in number 
+) AS  
+    cursor c_user is select USER_ID from GMAE_USER; 
+    v_user_id warehouse.user_id%type; 
+    v_hero_count number; 
+    v_hero_id warehouse.hero_id%type; 
+BEGIN 
+    DBMS_OUTPUT.ENABLE(buffer_size => null); 
+    open c_user; 
+    loop 
+        fetch c_user into v_user_id; 
+        exit when c_user%NOTFOUND; 
+        SELECT trunc(dbms_random.value(0,10))into v_hero_count FROM DUAL; 
+        DBMS_OUTPUT.PUT_LINE('该轮循环走'||v_hero_count||'次'); 
+        for i in 0..v_hero_count 
+        loop  
+            SELECT trunc(dbms_random.value(0,in_hero_count))into v_hero_id FROM DUAL; 
+            insert into WAREHOUSE(USER_ID,HERO_ID)  
+            VALUES (v_user_id,v_hero_id); 
+            DBMS_OUTPUT.PUT_LINE('插入 v_user_id = '||v_user_id||' v_hero_id = '|| v_hero_id); 
+        end loop; 
+    end loop; 
+    close c_user; 
+END ADD_WAREHOUSE; 
+```
+
+ ![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/插入Warehose表.jpg)
 
 ## 5.设计权限及用户分配方案
 
