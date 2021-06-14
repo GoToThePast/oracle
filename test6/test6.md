@@ -22,39 +22,95 @@
 
 ## 2. 数据表说明
 
-1. User表：存储用户数据
+### 2.1 User表：存储用户数据
    - user_id：INT 用户id
    - name：VARCHAR 用户名
    - password：VARCHAR 密码
    - gold：INT 金币
-2. Hero表：游戏英雄表 
+### 2. 2 Hero表：游戏英雄表 
    - hero_Id：INT 英雄id
    - attribute_Id：INT 属性id
    - name：VARCHAR 用户名
-3. Attribute表：英雄属性表
+### 2.3 Attribute表：英雄属性表
    - attribute_Id：INT 属性id
    - hp：INT 生命值
    - magic：INT 魔力值
    - attack：INT 攻击力
    - defense：INT 防御力
    - speed：INT 速度
-4. Shop表：商店表
+### 2.4  Shop表：商店表
    - hero_id：INT 英雄id
    - price：INT 售卖价格
    - introduce：VARCHAR 介绍
-5. Order表：订单表
+### 2.5 Order表：订单表
    - order_Id：INT 订单id
    - user_id：INT 用户id
    - hero_Id：INT 英雄id
    - create_date：DataTime 创建时间
    - status：VARCHAR 订单状态
-6. Warehose表：用户拥有的英雄仓库表
+### 2.6 Warehose表：用户拥有的英雄仓库表
    - user_id：INT 用户id
    - hero_Id：INT 英雄id
 
+
+
 ## 3. 数据库逻辑结构
 
-![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84.png)
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/%E6%95%B0%E6%8D%AE%E5%BA%93%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84.jpg)
+
+
+
+
+
+
+
+## 4. 设计简介
+
+### 4.1 创建表空间
+
+```sql
+-- 创建表空间wang_users
+CREATE TABLESPACE wang_users DATAFILE
+'F:/Wangw/program/oradata/WANGW/wang_users_1.dbf'
+SIZE 100M AUTOEXTEND ON NEXT 50M MAXSIZE UNLIMITED,
+'F:/Wangw/program/oradata/WANGW/wang_users_2.dbf'
+SIZE 100M AUTOEXTEND ON NEXT 50M MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT AUTO;
+
+-- 创建表空间wang_users1
+CREATE TABLESPACE wang_users1 DATAFILE
+'F:/Wangw/program/oradata/WANGW/wang_users1_1.dbf'
+SIZE 100M AUTOEXTEND ON NEXT 50M MAXSIZE UNLIMITED,
+'F:/Wangw/program/oradata/WANGW/wang_users1_2.dbf'
+SIZE 100M AUTOEXTEND ON NEXT 50M MAXSIZE UNLIMITED
+EXTENT MANAGEMENT LOCAL SEGMENT SPACE MANAGEMENT AUTO;
+```
+
+![](https://raw.githubusercontent.com/GoToThePast/oracle/master/test6/img/创建表空间.jpg)
+
+### 4.2 创建数据表
+
+### 4.3 向表中插入数据
+
+1. 
+
+
+
+## 5.设计权限及用户分配方案
+
+5.1
+
+## 6. 综合设计
+
+**在数据库中建立一个程序包，在包中用PL/SQL语言设计一些存储过程和函数，实现比较复杂的业务逻辑，用模拟数据进行执行计划分析**
+
+
+
+## 7.设计手动备份方案
+
+>**手动备份方案——脱机备份**
+>
+>**自动备份方案——用户管理备份**
 
 
 
@@ -64,13 +120,7 @@
 
 
 
-
-
-
-
-
-
-## 总结
+## 8.总结
 
 通过本次期末项目，让我我对Oracle的基本概念如表和视图理解的更加深刻了，Oracle 数据库数据对象中最基本的是表和视图，其他还有约束、序列、函数、存储过程、包、触发器等。对数据库的操作可以基本归结为对数据对象的操作,理解和掌握 Oracle数据库对象是学习Oracle的捷径。同时让我对以前就比较迷惑的数据库、实例、表空间、用户、角色之间的关系豁然开朗：
 
@@ -80,7 +130,7 @@
 
 本次实验让我对创建表空间的语法，条件语句、分支语句、循环语句的使用方法和常用的PL/SQL函数掌握的更加熟练了，掌握了使用SQL语句创建视图，并且学会了部分存储过程和触发器的使用。
 
-通过本次期末项目，让我收获很大，对Oracle也更加的充满激情了
+通过本次期末项目，让我收获很大，对自己的能力与不足有了更加清晰的认识，并且对Oracle也更加的充满激情了
 
 
 
